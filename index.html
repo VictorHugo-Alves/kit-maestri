@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit Maestri</title>
+<meta name="description" content="Aula: Maestri, Obsidian e GitHub. Monte a sua equipe de IAs com memória e histórico.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080d; --bg2:#0d0f18; --card:#121522; --card2:#171b2b; --line:#232840;
+  --tx:#eef0f7; --tx2:#a9afc6; --tx3:#6f7693;
+  --gold:#f5c66b; --gold2:#e8a33d;
+  --vio:#8b7bff; --cy:#4fd1e8; --gr:#5ee3a1; --rose:#ff7a9c;
+  --maestri:linear-gradient(135deg,#f5c66b,#e8a33d);
+  --obsidian:linear-gradient(135deg,#a993ff,#6c4dff);
+  --github:linear-gradient(135deg,#5ee3a1,#24b47e);
+  --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{background:var(--bg);color:var(--tx);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:#f5c66b44}
+a{color:inherit}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.serif{font-family:Fraunces,Georgia,serif}
+
+/* fundo */
+.bgfx{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+   radial-gradient(900px 600px at 85% -10%,#8b7bff22,transparent 60%),
+   radial-gradient(800px 500px at -10% 30%,#f5c66b14,transparent 60%),
+   radial-gradient(700px 500px at 60% 110%,#4fd1e814,transparent 60%),var(--bg)}
+.bgfx:after{content:"";position:absolute;inset:0;opacity:.35;
+  background-image:radial-gradient(#ffffff10 1px,transparent 1px);background-size:28px 28px;
+  mask-image:linear-gradient(#000,transparent 85%)}
+
+/* progresso */
+#prog{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:linear-gradient(90deg,var(--gold),var(--vio),var(--gr))}
+
+/* navegação */
+nav.side{position:fixed;left:24px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:6px}
+nav.side a{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--tx3);font-size:13px;font-weight:500;padding:6px 10px;border-radius:10px;transition:.25s}
+nav.side a i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:.25s;flex:none}
+nav.side a span{opacity:0;transform:translateX(-6px);transition:.25s;white-space:nowrap}
+nav.side:hover a span,nav.side a.on span{opacity:1;transform:none}
+nav.side a.on{color:var(--tx)}
+nav.side a.on i{background:var(--gold);box-shadow:0 0 0 4px #f5c66b22}
+@media (max-width:1100px){nav.side{display:none}}
+
+main{max-width:1080px;margin:0 auto;padding:0 16px}
+section{padding:110px 0 40px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--tx2);padding:6px 12px;border:1px solid var(--line);border-radius:99px;background:#ffffff06}
+.eyebrow b{width:7px;height:7px;border-radius:50%}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.02em;line-height:1.08}
+h2{font-size:clamp(34px,5.2vw,58px);margin:18px 0 18px}
+h3{font-size:24px;margin-bottom:8px}
+.lead{font-size:clamp(17px,2vw,20px);color:var(--tx2);max-width:720px}
+.grad-m{background:var(--maestri);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad-o{background:var(--obsidian);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad-g{background:var(--github);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad-all{background:linear-gradient(100deg,#f5c66b,#ff9ab3 35%,#a993ff 65%,#5ee3a1);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* hero */
+.hero{min-height:100vh;display:grid;align-items:center;padding:80px 0 40px}
+.hero h1{font-size:clamp(46px,8.5vw,104px);font-weight:800;margin:22px 0 22px}
+.hero .lead{font-size:clamp(18px,2.3vw,22px)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:14px;font-weight:600;text-decoration:none;transition:.2s;border:1px solid var(--line);cursor:pointer;font-size:15px}
+.btn.pri{background:var(--maestri);color:#1a1205;border:0;box-shadow:0 10px 40px -10px #f5c66b88}
+.btn.pri:hover{transform:translateY(-2px);box-shadow:0 16px 50px -10px #f5c66baa}
+.btn.sec{background:#ffffff08;color:var(--tx)}
+.btn.sec:hover{background:#ffffff12}
+.trio{display:flex;gap:10px;flex-wrap:wrap;margin-top:44px}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:14px}
+.dot{width:10px;height:10px;border-radius:50%}
+.d-m{background:var(--maestri)} .d-o{background:var(--obsidian)} .d-g{background:var(--github)}
+
+/* orquestra (svg hero) */
+.stage{position:relative;margin-top:56px;border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,#10131f,#0b0d16);overflow:hidden}
+.stage svg{display:block;width:100%;height:auto}
+.stage .cap{position:absolute;left:20px;bottom:16px;font-size:12px;color:var(--tx3)}
+.flow{stroke-dasharray:6 10;animation:flow 1.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-32}}
+.pulse{animation:pulse 2.6s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+@keyframes pulse{50%{transform:scale(1.08);opacity:.85}}
+.blink{animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* cards */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,var(--card),#0f1220);border:1px solid var(--line);border-radius:var(--r);padding:24px;position:relative;overflow:hidden;transition:.3s}
+.card:hover{border-color:#353c5e;transform:translateY(-3px)}
+.card p{color:var(--tx2);font-size:15px}
+.card .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;margin-bottom:16px;font-size:22px;background:#ffffff08;border:1px solid var(--line)}
+.card.big{padding:30px}
+.card .tag{position:absolute;top:18px;right:18px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3)}
+.card.m:before,.card.o:before,.card.g:before{content:"";position:absolute;inset:0 0 auto 0;height:3px}
+.card.m:before{background:var(--maestri)} .card.o:before{background:var(--obsidian)} .card.g:before{background:var(--github)}
+.card .glow{position:absolute;width:220px;height:220px;border-radius:50%;filter:blur(70px);opacity:.18;right:-60px;bottom:-80px}
+.num{font-family:Fraunces,serif;font-size:13px;color:var(--gold);font-weight:600;letter-spacing:.08em}
+
+.block{margin-top:56px}
+.block>h3{font-size:30px;margin-bottom:14px}
+.block>p{color:var(--tx2);max-width:760px;margin-bottom:24px}
+
+/* antes/depois */
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch}
+@media (max-width:760px){.vs{grid-template-columns:1fr}.vs .arrow{transform:rotate(90deg);justify-self:center}}
+.vs .arrow{align-self:center;font-size:28px;color:var(--gold)}
+.mess{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.mess div{height:46px;border-radius:8px;background:#ffffff08;border:1px dashed #ffffff20;display:grid;place-items:center;font-size:11px;color:var(--tx3);transform:rotate(var(--r,0deg))}
+
+/* citação */
+.quote{margin-top:40px;padding:34px;border-radius:24px;border:1px solid var(--line);background:linear-gradient(120deg,#f5c66b10,#8b7bff10)}
+.quote p{font-family:Fraunces,serif;font-size:clamp(22px,3vw,32px);line-height:1.3}
+.quote small{display:block;margin-top:12px;color:var(--tx3)}
+
+/* tabela de equipe */
+.team{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media (max-width:900px){.team{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.team{grid-template-columns:1fr}}
+.mem{padding:20px;border-radius:16px;background:var(--card);border:1px solid var(--line);text-align:left}
+.mem .av{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-weight:800;font-family:Fraunces,serif;font-size:20px;color:#0b0b10;margin-bottom:14px}
+.mem b{display:block;font-size:17px}
+.mem .ia{font-size:12px;color:var(--tx3);margin:2px 0 10px}
+.mem p{font-size:14px;color:var(--tx2)}
+.mem.lead-m{border-color:#f5c66b66;background:linear-gradient(180deg,#1d1a12,var(--card))}
+
+/* lista de regras */
+.rules{counter-reset:r;display:grid;gap:10px}
+.rules li{list-style:none;counter-increment:r;display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;padding:16px 18px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.rules li:before{content:counter(r,decimal-leading-zero);font-family:Fraunces,serif;color:var(--gold);font-weight:600;font-size:20px}
+.rules li b{display:block}
+.rules li span{color:var(--tx2);font-size:15px}
+
+/* glossário */
+.gloss{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media (max-width:620px){.gloss{grid-template-columns:1fr}}
+.gloss div{padding:18px 20px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);background:#0e111c}
+.gloss b{color:var(--gold);font-weight:600}
+.gloss span{display:block;color:var(--tx2);font-size:14.5px;margin-top:2px}
+
+/* git timeline */
+.timeline{position:relative;padding:30px 10px 10px;overflow-x:auto}
+.commits{display:flex;align-items:center;gap:0;min-width:640px}
+.cm{flex:1;position:relative;text-align:center}
+.cm:before{content:"";position:absolute;top:14px;left:0;right:0;height:2px;background:linear-gradient(90deg,#24b47e,#5ee3a1)}
+.cm:first-child:before{left:50%} .cm:last-child:before{right:50%}
+.cm i{position:relative;display:inline-block;width:30px;height:30px;border-radius:50%;background:#0b0d16;border:3px solid var(--gr);z-index:1}
+.cm.now i{background:var(--gr);box-shadow:0 0 0 6px #5ee3a133}
+.cm b{display:block;margin-top:10px;font-size:14px}
+.cm span{display:block;font-size:12px;color:var(--tx3)}
+
+/* comandos */
+.term{background:#05060a;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.term .bar{display:flex;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line);background:#0b0d16}
+.term .bar i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.term .bar i:nth-child(2){background:#febc2e}.term .bar i:nth-child(3){background:#28c840}
+.term pre{padding:18px 20px;font:13.5px/1.75 "JetBrains Mono",monospace;color:#cfd5ea;overflow-x:auto;white-space:pre}
+.term .c{color:#6f7693}.term .k{color:var(--gold)}.term .s{color:var(--gr)}
+
+/* passos */
+.steps{display:grid;gap:14px;counter-reset:s}
+.step{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:24px;border-radius:20px;background:var(--card);border:1px solid var(--line);counter-increment:s}
+.step:before{content:counter(s);width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-family:Fraunces,serif;font-weight:800;font-size:24px;background:var(--maestri);color:#1a1205}
+.step p{color:var(--tx2)}
+.copy{margin-top:14px;display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+.copy code{flex:1;min-width:220px;padding:14px 16px;border-radius:12px;background:#05060a;border:1px solid var(--line);font:14px "JetBrains Mono",monospace;color:#e9ecf8}
+.copy button{padding:0 18px;border-radius:12px;border:1px solid var(--line);background:#ffffff0a;color:var(--tx);font-weight:600;cursor:pointer;min-height:46px}
+.copy button:hover{background:#ffffff16}
+code.in{font:13.5px "JetBrains Mono",monospace;background:#ffffff0d;border:1px solid var(--line);padding:1px 7px;border-radius:6px;color:#e9ecf8}
+
+/* encaixe */
+.fit{position:relative;border:1px solid var(--line);border-radius:28px;background:#0b0d16;padding:10px;overflow:hidden}
+.fit svg{width:100%;height:auto;display:block}
+
+.warn{display:flex;gap:14px;padding:18px 20px;border-radius:16px;border:1px solid #ff7a9c44;background:#ff7a9c0d;margin-top:16px}
+.warn b{color:var(--rose)}
+.ok{border-color:#5ee3a144;background:#5ee3a10d}.ok b{color:var(--gr)}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.flow,.pulse,.blink{animation:none}}
+
+footer{padding:80px 0 60px;text-align:center;color:var(--tx3);font-size:14px;border-top:1px solid var(--line);margin-top:80px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:30px 0 0}
+</style>
+</head>
+<body>
+<div class="bgfx"></div>
+<div id="prog"></div>
+
+<nav class="side" aria-label="Seções">
+  <a href="#inicio"><i></i><span>Início</span></a>
+  <a href="#panorama"><i></i><span>As três peças</span></a>
+  <a href="#maestri"><i></i><span>Maestri</span></a>
+  <a href="#equipe"><i></i><span>A equipe</span></a>
+  <a href="#obsidian"><i></i><span>Obsidian</span></a>
+  <a href="#github"><i></i><span>GitHub</span></a>
+  <a href="#encaixe"><i></i><span>Como se encaixam</span></a>
+  <a href="#comecar"><i></i><span>Começar</span></a>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div>
+    <span class="eyebrow reveal"><b class="d-m"></b> Aula · Kit Maestri</span>
+    <h1 class="reveal">Monte a sua<br><span class="grad-all">equipe de IAs.</span></h1>
+    <p class="lead reveal">Uma aula sobre as três ferramentas que transformam uma IA solta numa equipe que
+      trabalha junto, lembra de tudo e nunca perde o que fez: <b>Maestri</b>, <b>Obsidian</b> e <b>GitHub</b>.</p>
+    <div class="cta reveal">
+      <a class="btn pri" href="kit-maestri.zip" download>⬇ Baixar o kit de setup</a>
+      <a class="btn sec" href="#panorama">Começar a aula →</a>
+    </div>
+    <div class="trio reveal">
+      <span class="chip"><i class="dot d-m"></i>Maestri · o palco</span>
+      <span class="chip"><i class="dot d-o"></i>Obsidian · a memória</span>
+      <span class="chip"><i class="dot d-g"></i>GitHub · o cofre</span>
+    </div>
+
+    <div class="stage reveal" aria-hidden="true">
+      <svg viewBox="0 0 1000 420">
+        <defs>
+          <linearGradient id="gm" x1="0" x2="1"><stop offset="0" stop-color="#f5c66b"/><stop offset="1" stop-color="#e8a33d"/></linearGradient>
+          <radialGradient id="halo"><stop offset="0" stop-color="#f5c66b" stop-opacity=".35"/><stop offset="1" stop-color="#f5c66b" stop-opacity="0"/></radialGradient>
+        </defs>
+        <circle cx="500" cy="200" r="150" fill="url(#halo)"/>
+        <g stroke="#f5c66b" stroke-width="2" fill="none" opacity=".75">
+          <path class="flow" d="M500 200 C 380 200, 300 90, 170 90"/>
+          <path class="flow" d="M500 200 C 380 200, 300 320, 170 320" style="animation-delay:-.4s"/>
+          <path class="flow" d="M500 200 C 620 200, 700 90, 830 90" style="animation-delay:-.8s"/>
+          <path class="flow" d="M500 200 C 620 200, 700 320, 830 320" style="animation-delay:-1.2s"/>
+        </g>
+        <path d="M170 90 C 120 180, 120 230, 170 320" stroke="#4fd1e8" stroke-width="1.5" fill="none" class="flow" opacity=".5"/>
+        <!-- maestro -->
+        <g class="pulse">
+          <rect x="410" y="150" width="180" height="100" rx="20" fill="#1a1710" stroke="url(#gm)" stroke-width="2"/>
+        </g>
+        <text x="500" y="190" text-anchor="middle" fill="#f5c66b" font-family="Fraunces" font-size="22" font-weight="700">Maestro</text>
+        <text x="500" y="216" text-anchor="middle" fill="#a9afc6" font-family="Inter" font-size="13">você fala só com ele</text>
+        <rect x="474" y="226" width="52" height="4" rx="2" fill="#f5c66b" opacity=".35"/>
+        <!-- agentes -->
+        <g font-family="Inter">
+          <rect x="60" y="50" width="220" height="80" rx="16" fill="#121522" stroke="#2c3354"/>
+          <circle cx="92" cy="90" r="16" fill="#8b7bff"/><text x="92" y="95" text-anchor="middle" font-size="13" font-weight="800" fill="#0b0b10">JP</text>
+          <text x="120" y="85" fill="#eef0f7" font-size="15" font-weight="600">Back-end e banco</text>
+          <text x="120" y="106" fill="#6f7693" font-size="12" font-family="JetBrains Mono">Claude · Opus<tspan class="blink" fill="#f5c66b"> ▍</tspan></text>
+
+          <rect x="60" y="280" width="220" height="80" rx="16" fill="#121522" stroke="#2c3354"/>
+          <circle cx="92" cy="320" r="16" fill="#4fd1e8"/><text x="92" y="325" text-anchor="middle" font-size="13" font-weight="800" fill="#0b0b10">VH</text>
+          <text x="120" y="315" fill="#eef0f7" font-size="15" font-weight="600">Dados e conferência</text>
+          <text x="120" y="336" fill="#6f7693" font-size="12" font-family="JetBrains Mono">Claude · Sonnet</text>
+
+          <rect x="720" y="50" width="220" height="80" rx="16" fill="#121522" stroke="#2c3354"/>
+          <circle cx="752" cy="90" r="16" fill="#5ee3a1"/><text x="752" y="95" text-anchor="middle" font-size="13" font-weight="800" fill="#0b0b10">JR</text>
+          <text x="780" y="85" fill="#eef0f7" font-size="15" font-weight="600">Front e dashboards</text>
+          <text x="780" y="106" fill="#6f7693" font-size="12" font-family="JetBrains Mono">Codex · GPT<tspan class="blink" fill="#5ee3a1"> ▍</tspan></text>
+
+          <rect x="720" y="280" width="220" height="80" rx="16" fill="#121522" stroke="#2c3354"/>
+          <circle cx="752" cy="320" r="16" fill="#ff7a9c"/><text x="752" y="325" text-anchor="middle" font-size="13" font-weight="800" fill="#0b0b10">AR</text>
+          <text x="780" y="315" fill="#eef0f7" font-size="15" font-weight="600">Pesquisa e teste</text>
+          <text x="780" y="336" fill="#6f7693" font-size="12" font-family="JetBrains Mono">Claude · Sonnet</text>
+        </g>
+        <!-- nota quadro -->
+        <g transform="translate(420 300) rotate(-3)">
+          <rect width="160" height="92" rx="6" fill="#f5e7a8"/>
+          <text x="14" y="24" font-family="Fraunces" font-weight="700" font-size="15" fill="#3a2f0a">Quadro</text>
+          <text x="14" y="46" font-family="Inter" font-size="11" fill="#5c4d1a">FAZENDO · 3</text>
+          <text x="14" y="62" font-family="Inter" font-size="11" fill="#5c4d1a">FEITO HOJE · 7</text>
+          <text x="14" y="78" font-family="Inter" font-size="11" fill="#5c4d1a">ESPERANDO VOCÊ · 1</text>
+        </g>
+        <path d="M500 250 L500 300" stroke="#f5e7a8" stroke-width="1.5" stroke-dasharray="3 5" opacity=".6"/>
+      </svg>
+      <div class="cap">O canvas do Maestri: um Maestro, quatro especialistas e uma nota que todos leem.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PANORAMA -->
+<section id="panorama">
+  <span class="eyebrow reveal"><b class="d-m"></b> 01 · O panorama</span>
+  <h2 class="reveal">Três peças. <span class="grad-all">Um cérebro só.</span></h2>
+  <p class="lead reveal">Cada ferramenta resolve um problema diferente. Sozinhas já ajudam. Juntas, viram um
+    sistema em que a IA trabalha em equipe, lembra do seu negócio e nunca perde nada.</p>
+
+  <div class="grid g3 block">
+    <div class="card big m reveal">
+      <div class="glow" style="background:#f5c66b"></div>
+      <span class="tag">o palco</span>
+      <div class="ic">🎼</div>
+      <h3 class="grad-m">Maestri</h3>
+      <p><b style="color:var(--tx)">Quem trabalha.</b> Coloca várias IAs lado a lado, cada uma com uma função, e
+        deixa um Maestro dividir o trabalho e revisar o que volta.</p>
+    </div>
+    <div class="card big o reveal">
+      <div class="glow" style="background:#8b7bff"></div>
+      <span class="tag">a memória</span>
+      <div class="ic">🧠</div>
+      <h3 class="grad-o">Obsidian</h3>
+      <p><b style="color:var(--tx)">O que se sabe.</b> As suas notas e as da IA, num lugar só, em arquivos que você
+        enxerga, edita e vê ligados como um mapa.</p>
+    </div>
+    <div class="card big g reveal">
+      <div class="glow" style="background:#5ee3a1"></div>
+      <span class="tag">o cofre</span>
+      <div class="ic">🔐</div>
+      <h3 class="grad-g">GitHub</h3>
+      <p><b style="color:var(--tx)">O que nunca se perde.</b> Backup na nuvem, histórico de todas as versões e
+        sincronia entre os seus computadores.</p>
+    </div>
+  </div>
+
+  <div class="quote reveal">
+    <p>“A IA não precisa ser mais inteligente. Ela precisa de <span class="grad-m">uma equipe</span>, de
+      <span class="grad-o">memória</span> e de <span class="grad-g">um lugar seguro</span> para guardar o que fez.”</p>
+    <small>A ideia central desta aula</small>
+  </div>
+</section>
+
+<!-- MAESTRI -->
+<section id="maestri">
+  <span class="eyebrow reveal"><b class="d-m"></b> 02 · Maestri</span>
+  <h2 class="reveal">O <span class="grad-m">maestro</span> das suas IAs.</h2>
+  <p class="lead reveal">O Maestri é um aplicativo com uma tela infinita onde você coloca vários agentes de IA
+    lado a lado, dá uma função para cada um, e eles conversam entre si.</p>
+
+  <div class="block">
+    <h3 class="reveal">Pensa numa orquestra</h3>
+    <p class="reveal">Cada IA é um músico que toca muito bem um instrumento. O Maestro lê a partitura, diz quem
+      entra quando e garante que tudo soe como uma música só. No Maestri, o Maestro é uma IA também: você
+      conversa com ele, e ele rege os outros.</p>
+    <div class="vs">
+      <div class="card reveal">
+        <span class="num">SEM O MAESTRI</span>
+        <h3 style="margin-top:8px">Abas soltas</h3>
+        <p>Cinco janelas de IA. Você corre de uma para outra, copia e cola entre elas e guarda na cabeça quem
+          estava fazendo o quê.</p>
+        <div class="mess">
+          <div style="--r:-4deg">aba 1</div><div style="--r:3deg">aba 2?</div><div style="--r:-2deg">aba 3</div>
+          <div style="--r:5deg">qual era?</div><div style="--r:-3deg">aba 5</div><div style="--r:2deg">copiar…</div>
+        </div>
+      </div>
+      <div class="arrow reveal">→</div>
+      <div class="card m reveal">
+        <span class="num">COM O MAESTRI</span>
+        <h3 style="margin-top:8px">Uma sala de reuniões visual</h3>
+        <p>Cada agente é uma mesa no quadro. Você liga duas mesas com uma linha e elas passam a se falar. O
+          estado do trabalho fica à vista, não só na sua cabeça.</p>
+        <div class="mess">
+          <div style="border:1px solid #f5c66b55;color:#f5c66b">Maestro</div><div style="border-style:solid">Back-end</div><div style="border-style:solid">Front</div>
+          <div style="border-style:solid">Dados</div><div style="border-style:solid">Pesquisa</div><div style="border:1px solid #f5e7a855;color:#f5e7a8">Quadro</div>
+        </div>
+      </div>
+    </div>
+    <div class="warn ok reveal"><span>💡</span><div><b>O Maestri não é uma IA.</b> É o palco. As IAs (Claude Code,
+      Codex, Gemini, OpenCode) você instala e assina à parte, e escolhe quais quer no seu quadro.</div></div>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">Por que misturar IAs</h3>
+    <div class="grid g3">
+      <div class="card reveal"><div class="ic">🔀</div><h3>Não depende de um só</h3><p>Claude, ChatGPT e outros no
+        mesmo quadro. Se um fornecedor cair ou mudar, a equipe continua.</p></div>
+      <div class="card reveal"><div class="ic">🔍</div><h3>Um revisa o outro</h3><p>Modelos diferentes erram em
+        lugares diferentes. Uma IA de outra empresa pega o erro que a primeira não vê.</p></div>
+      <div class="card reveal"><div class="ic">⚖️</div><h3>Rende mais a cota</h3><p>Tarefa pesada vai para o modelo
+        forte, tarefa simples para o leve. E cada assinatura tem a própria cota.</p></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">O que ele possibilita</h3>
+    <div class="grid g3">
+      <div class="card reveal"><span class="num">01</span><h3>Equipe com funções</h3><p>Um lidera, um constrói, um
+        confere, um pesquisa. Cada um faz uma coisa só, e faz melhor.</p></div>
+      <div class="card reveal"><span class="num">02</span><h3>Agentes que conversam</h3><p>O Maestro manda tarefa,
+        espera a resposta e revisa. Ou pede para o Codex revisar o código do Claude.</p></div>
+      <div class="card reveal"><span class="num">03</span><h3>Trabalho em paralelo</h3><p>Banco, tela e pesquisa ao
+        mesmo tempo. O que levaria uma tarde em fila sai em uma hora.</p></div>
+      <div class="card reveal"><span class="num">04</span><h3>Notas compartilhadas</h3><p>Um post-it no quadro ligado
+        a vários agentes vira memória comum, mesmo entre IAs de empresas diferentes.</p></div>
+      <div class="card reveal"><span class="num">05</span><h3>Portais</h3><p>Um navegador dentro do quadro que o
+        agente consegue ver e operar: clicar, preencher, conferir a tela que ele fez.</p></div>
+      <div class="card reveal"><span class="num">06</span><h3>Andares (floors)</h3><p>Uma cópia isolada do projeto
+        para testar algo arriscado sem encostar no trabalho principal.</p></div>
+      <div class="card reveal"><span class="num">07</span><h3>Rotinas</h3><p>Comandos e lembretes agendados: todo dia
+        às 9h, a cada 30 minutos, uma vez numa data.</p></div>
+      <div class="card reveal"><span class="num">08</span><h3>Partituras</h3><p>Salve a configuração da sua equipe e
+        reaplique em outro projeto, sem montar do zero.</p></div>
+      <div class="card reveal"><span class="num">09</span><h3>Local e privado</h3><p>O quadro, as notas e os papéis
+        ficam em arquivos na sua máquina. As IAs continuam falando com os servidores delas.</p></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">O vocabulário</h3>
+    <div class="gloss reveal">
+      <div><b>Workspace</b><span>Um projeto, apontado para uma pasta do seu computador.</span></div>
+      <div><b>Terminal</b><span>Uma mesa no quadro, onde roda uma IA.</span></div>
+      <div><b>Maestro</b><span>O terminal principal. Recruta, liga e coordena os outros.</span></div>
+      <div><b>Papel</b><span>O texto que diz ao agente quem ele é, o que faz e o que não pode fazer.</span></div>
+      <div><b>Preset</b><span>O tipo de IA que abre no terminal: Claude Code, Codex, OpenCode.</span></div>
+      <div><b>Linha</b><span>Liga dois terminais, ou um terminal a uma nota. Só quem está ligado conversa.</span></div>
+      <div><b>Nota</b><span>Post-it em markdown. Ligada a vários agentes, vira memória comum.</span></div>
+      <div><b>Portal</b><span>Um navegador (ou celular simulado) que o agente opera.</span></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">Na prática, é isto</h3>
+    <p class="reveal">Você não precisa decorar: quem digita é o Maestro. Mas é bom saber o que acontece por baixo.</p>
+    <div class="term reveal">
+      <div class="bar"><i></i><i></i><i></i></div>
+<pre><span class="c"># quem está no quadro?</span>
+<span class="k">maestri</span> list
+<span class="c"># criar um especialista com função e modelo fixos</span>
+<span class="k">maestri</span> recruit <span class="s">"VH"</span> --role <span class="s">"Dados e conferência"</span> --command <span class="s">"claude --model sonnet"</span>
+<span class="c"># mandar tarefa e esperar a resposta</span>
+<span class="k">maestri</span> ask <span class="s">"VH"</span> <span class="s">"Confira os números da planilha de vendas e me diga o que não bate."</span>
+<span class="c"># mandar para dois ao mesmo tempo</span>
+<span class="k">maestri</span> ask --batch <span class="s">'{"JP":"crie a tabela de clientes","Junior":"faça a tela de cadastro"}'</span>
+<span class="c"># atualizar o quadro que todos leem</span>
+<span class="k">maestri</span> note write <span class="s">"Quadro"</span> <span class="s">"FAZENDO: JP (tabela), Junior (tela)"</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPE -->
+<section id="equipe">
+  <span class="eyebrow reveal"><b class="d-m"></b> 03 · Caso real</span>
+  <h2 class="reveal">A nossa equipe de <span class="grad-m">5 terminais.</span></h2>
+  <p class="lead reveal">É assim que a gente trabalha no dia a dia. Os nomes e as funções são nossos; os seus saem
+    do seu negócio.</p>
+
+  <div class="team block">
+    <div class="mem lead-m reveal"><div class="av" style="background:var(--maestri)">M</div><b>Maestro</b>
+      <div class="ia mono">Claude Code · Opus</div><p>Fala com a gente, divide, revisa, faz commit e publica.</p></div>
+    <div class="mem reveal"><div class="av" style="background:#8b7bff">JP</div><b>JP</b>
+      <div class="ia mono">Claude Code · Opus</div><p>Back-end e banco: tabelas, regras de acesso, APIs e integrações.</p></div>
+    <div class="mem reveal"><div class="av" style="background:#5ee3a1">JR</div><b>Junior</b>
+      <div class="ia mono">Codex · GPT</div><p>Front-end e dashboards. Revisa o código do JP com olhar de outro modelo.</p></div>
+    <div class="mem reveal"><div class="av" style="background:#4fd1e8">VH</div><b>VH</b>
+      <div class="ia mono">Claude Code · Sonnet</div><p>Dados e conferência: planilha grande, número conferido antes da liderança.</p></div>
+    <div class="mem reveal"><div class="av" style="background:#ff7a9c">AR</div><b>Arthur</b>
+      <div class="ia mono">Claude Code · Sonnet</div><p>Pesquisa e teste: documentação, web e teste depois de cada entrega.</p></div>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">As regras que fazem funcionar</h3>
+    <ol class="rules">
+      <li class="reveal"><div><b>Fale só com o Maestro.</b><span>Ele distribui. Texto digitado na caixa de um agente não é seu, é do Maestro.</span></div></li>
+      <li class="reveal"><div><b>Cada terminal tem uma função fechada.</b><span>Com dois "executores" iguais, o Maestro não tinha critério e acabava fazendo tudo sozinho.</span></div></li>
+      <li class="reveal"><div><b>Só o Maestro faz commit, push e publica.</b><span>Cinco terminais mexendo no mesmo repositório é receita para conflito.</span></div></li>
+      <li class="reveal"><div><b>O Maestro revisa tudo que volta.</b><span>Roda o teste de novo. Não confia no "passou".</span></div></li>
+      <li class="reveal"><div><b>Uma tarefa por agente por vez.</b><span>A segunda espera na fila ou vai para outro.</span></div></li>
+      <li class="reveal"><div><b>O Quadro é reescrito a cada etapa.</b><span>FAZENDO, FEITO, ESPERANDO VOCÊ, BACKLOG. Bateu o olho, sabe como está.</span></div></li>
+      <li class="reveal"><div><b>Modelo certo para cada tarefa.</b><span>Pesado no Opus, volume no Sonnet, revisão cruzada no Codex.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- OBSIDIAN -->
+<section id="obsidian">
+  <span class="eyebrow reveal"><b class="d-o"></b> 04 · Obsidian</span>
+  <h2 class="reveal">A <span class="grad-o">memória</span> que você enxerga.</h2>
+  <p class="lead reveal">O Obsidian é um aplicativo gratuito de notas. A diferença: as notas são arquivos de texto
+    simples numa pasta do seu computador, e não ficam presas no sistema de outra empresa.</p>
+
+  <div class="grid g2 block">
+    <div class="card o reveal" style="padding:0;overflow:hidden">
+      <svg viewBox="0 0 520 380" style="display:block;width:100%;height:auto" aria-label="Grafo de notas ligadas">
+        <rect width="520" height="380" fill="#0d0b19"/>
+        <g stroke="#6c4dff" stroke-opacity=".45" stroke-width="1.4">
+          <line x1="260" y1="190" x2="130" y2="90"/><line x1="260" y1="190" x2="400" y2="80"/>
+          <line x1="260" y1="190" x2="120" y2="280"/><line x1="260" y1="190" x2="410" y2="290"/>
+          <line x1="260" y1="190" x2="260" y2="60"/><line x1="130" y1="90" x2="60" y2="170"/>
+          <line x1="400" y1="80" x2="470" y2="170"/><line x1="410" y1="290" x2="470" y2="170"/>
+          <line x1="120" y1="280" x2="230" y2="330"/><line x1="410" y1="290" x2="320" y2="335"/>
+          <line x1="130" y1="90" x2="260" y2="60"/><line x1="60" y1="170" x2="120" y2="280"/>
+        </g>
+        <g font-family="Inter" font-size="12" fill="#c9c0ff" text-anchor="middle">
+          <circle class="pulse" cx="260" cy="190" r="16" fill="#a993ff"/><text x="260" y="226" font-weight="600" fill="#fff">CLAUDE.md</text>
+          <circle cx="130" cy="90" r="9" fill="#8b7bff"/><text x="130" y="72">clientes</text>
+          <circle cx="400" cy="80" r="9" fill="#8b7bff"/><text x="400" y="62">vendas</text>
+          <circle cx="120" cy="280" r="9" fill="#8b7bff"/><text x="120" y="304">decisões</text>
+          <circle cx="410" cy="290" r="9" fill="#8b7bff"/><text x="410" y="314">reuniões</text>
+          <circle cx="260" cy="60" r="7" fill="#6c4dff"/><text x="260" y="44">índice</text>
+          <circle cx="60" cy="170" r="6" fill="#6c4dff"/><text x="60" y="155">contratos</text>
+          <circle cx="470" cy="170" r="6" fill="#6c4dff"/><text x="470" y="155">metas</text>
+          <circle cx="230" cy="330" r="6" fill="#6c4dff"/><text x="230" y="354">processos</text>
+          <circle cx="320" cy="335" r="6" fill="#6c4dff"/><text x="330" y="360">equipe</text>
+        </g>
+      </svg>
+    </div>
+    <div class="reveal">
+      <h3>Por que isso importa para a IA</h3>
+      <p style="color:var(--tx2);margin-bottom:18px">A IA lê e escreve esses mesmos arquivos. O que você anota, a IA
+        sabe. O que a IA registra, você vê. Não existe "a memória da IA" escondida num lugar e "as suas notas" em
+        outro: é uma pasta só.</p>
+      <div class="grid" style="gap:10px">
+        <div class="chip" style="justify-content:flex-start">📄 Notas em markdown: texto puro, abre em qualquer lugar</div>
+        <div class="chip" style="justify-content:flex-start">🔗 Links entre notas com <code class="in">[[nome]]</code></div>
+        <div class="chip" style="justify-content:flex-start">🕸️ Grafo: o mapa de como os assuntos se ligam</div>
+        <div class="chip" style="justify-content:flex-start">💸 Gratuito e sem conta obrigatória</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">O que ele possibilita</h3>
+    <div class="grid g3">
+      <div class="card reveal"><div class="ic">🪟</div><h3>Uma janela para o cérebro</h3><p>A IA trabalha dentro da
+        pasta. Você olha e edita pelo Obsidian, com tudo organizado e pesquisável.</p></div>
+      <div class="card reveal"><div class="ic">🧭</div><h3>Contexto que não se perde</h3><p>Decisões, regras do seu
+        negócio e o que ficou pendente viram arquivos. A próxima conversa começa sabendo.</p></div>
+      <div class="card reveal"><div class="ic">🧩</div><h3>O segundo cérebro</h3><p>Trabalho, estudos e projetos num
+        lugar só, ligados entre si. Você e a IA pensando sobre a mesma base.</p></div>
+    </div>
+    <div class="warn ok reveal"><span>✳️</span><div><b>A regra de ouro:</b> todo arquivo novo ganha uma linha no
+      <code class="in">INDICE.md</code>, e citar outro arquivo é sempre com link. É isso que faz o grafo funcionar
+      e a IA achar as coisas.</div></div>
+  </div>
+</section>
+
+<!-- GITHUB -->
+<section id="github">
+  <span class="eyebrow reveal"><b class="d-g"></b> 05 · GitHub</span>
+  <h2 class="reveal">O <span class="grad-g">cofre</span> com máquina do tempo.</h2>
+  <p class="lead reveal">O GitHub guarda a sua pasta de trabalho na nuvem, com o histórico de todas as versões.
+    Cada vez que a IA salva um "ponto", dá para voltar a ele, ver o que mudou e quando.</p>
+
+  <div class="grid g3 block">
+    <div class="card g reveal"><div class="ic">☁️</div><h3>Backup</h3><p>O computador morreu, foi roubado, o disco
+      corrompeu? Está tudo lá, do jeito que você deixou.</p></div>
+    <div class="card g reveal"><div class="ic">⏪</div><h3>Máquina do tempo</h3><p>A IA errou e apagou algo
+      importante? Volta para a versão de ontem em segundos.</p></div>
+    <div class="card g reveal"><div class="ic">🔄</div><h3>Sincronia</h3><p>O que você fez no notebook aparece no
+      computador do escritório. Essencial para quem usa mais de uma máquina.</p></div>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">Três palavras e você entende tudo</h3>
+    <div class="card reveal" style="padding:10px 18px 24px">
+      <div class="timeline">
+        <div class="commits">
+          <div class="cm"><i></i><b>Setup inicial</b><span>segunda, 9h</span></div>
+          <div class="cm"><i></i><b>Planilha de clientes</b><span>segunda, 15h</span></div>
+          <div class="cm"><i></i><b>Regras do negócio</b><span>terça, 10h</span></div>
+          <div class="cm now"><i></i><b>Dashboard de vendas</b><span>agora</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="grid g3" style="margin-top:16px">
+      <div class="card reveal"><span class="num mono">COMMIT</span><h3 style="margin-top:6px">Salvar um ponto</h3><p>Uma
+        foto da pasta naquele momento, com uma frase dizendo o que mudou.</p></div>
+      <div class="card reveal"><span class="num mono">PUSH</span><h3 style="margin-top:6px">Enviar para a nuvem</h3><p>Manda
+        os pontos salvos do seu computador para o GitHub.</p></div>
+      <div class="card reveal"><span class="num mono">PULL</span><h3 style="margin-top:6px">Trazer da nuvem</h3><p>Puxa o
+        que foi feito no outro computador antes de começar a mexer.</p></div>
+    </div>
+    <div class="warn ok reveal"><span>🤖</span><div><b>Você não precisa aprender git.</b> A IA faz commit e push ao fim
+      de cada tarefa, e pull ao começar. Você só olha o histórico quando quiser.</div></div>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">E o tal do token?</h3>
+    <p class="reveal">Para o seu computador poder enviar arquivos para o seu GitHub, ele precisa de uma chave de
+      acesso, que o GitHub chama de <b style="color:var(--tx)">token</b>. É como uma senha só para isso, que você
+      cancela quando quiser.</p>
+    <div class="grid g2">
+      <div class="card g reveal"><span class="num">O JEITO CERTO</span><h3 style="margin-top:6px">Login pelo navegador</h3>
+        <p>Num terminal separado, você digita <code class="in">gh auth login</code> e autoriza no navegador. O próprio
+          GitHub gera e guarda a chave. Ela nunca aparece na conversa com a IA.</p></div>
+      <div class="card reveal" style="border-color:#ff7a9c44"><span class="num" style="color:var(--rose)">NUNCA</span>
+        <h3 style="margin-top:6px">Colar token no chat</h3><p>Tudo o que você manda para a IA vai para o servidor
+          dela. Token, senha e chave ficam fora da conversa, sempre.</p></div>
+    </div>
+    <div class="warn reveal"><span>🔒</span><div><b>Repositório privado.</b> Se tem dado do seu negócio, o
+      repositório é privado. Só você (e quem você convidar) enxerga.</div></div>
+  </div>
+</section>
+
+<!-- ENCAIXE -->
+<section id="encaixe">
+  <span class="eyebrow reveal"><b class="d-m"></b> 06 · Juntando tudo</span>
+  <h2 class="reveal">Uma pasta, <span class="grad-all">três papéis.</span></h2>
+  <p class="lead reveal">O segredo é que as três ferramentas olham para a mesma pasta. Ela é, ao mesmo tempo, o
+    workspace do Maestri, o cofre do Obsidian e o repositório do GitHub.</p>
+
+  <div class="fit block reveal" aria-hidden="true">
+    <svg viewBox="0 0 1000 440">
+      <defs>
+        <linearGradient id="gf" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#1c2033"/><stop offset="1" stop-color="#11141f"/></linearGradient>
+      </defs>
+      <g stroke-width="2" fill="none">
+        <path class="flow" d="M500 220 C 400 220, 330 110, 220 110" stroke="#f5c66b"/>
+        <path class="flow" d="M500 220 C 600 220, 670 110, 780 110" stroke="#a993ff" style="animation-delay:-.5s"/>
+        <path class="flow" d="M500 220 L 500 360" stroke="#5ee3a1" style="animation-delay:-1s"/>
+      </g>
+      <!-- pasta -->
+      <g transform="translate(400 160)">
+        <path d="M0 18 a14 14 0 0 1 14 -14 h60 l18 18 h94 a14 14 0 0 1 14 14 v84 a14 14 0 0 1 -14 14 h-172 a14 14 0 0 1 -14 -14z" fill="url(#gf)" stroke="#3a4266" stroke-width="2"/>
+        <text x="100" y="74" text-anchor="middle" font-family="Fraunces" font-weight="700" font-size="20" fill="#eef0f7">meu-cerebro/</text>
+        <text x="100" y="98" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#6f7693">CLAUDE.md · INDICE.md</text>
+      </g>
+      <!-- maestri -->
+      <g transform="translate(90 60)">
+        <rect width="260" height="100" rx="18" fill="#1a1710" stroke="#f5c66b88"/>
+        <text x="24" y="40" font-family="Fraunces" font-weight="700" font-size="22" fill="#f5c66b">Maestri</text>
+        <text x="24" y="66" font-family="Inter" font-size="14" fill="#a9afc6">as IAs trabalham aqui dentro</text>
+      </g>
+      <!-- obsidian -->
+      <g transform="translate(650 60)">
+        <rect width="260" height="100" rx="18" fill="#15112a" stroke="#a993ff88"/>
+        <text x="24" y="40" font-family="Fraunces" font-weight="700" font-size="22" fill="#a993ff">Obsidian</text>
+        <text x="24" y="66" font-family="Inter" font-size="14" fill="#a9afc6">você enxerga e edita aqui</text>
+      </g>
+      <!-- github -->
+      <g transform="translate(370 330)">
+        <rect width="260" height="90" rx="18" fill="#0f1f19" stroke="#5ee3a188"/>
+        <text x="24" y="38" font-family="Fraunces" font-weight="700" font-size="22" fill="#5ee3a1">GitHub</text>
+        <text x="24" y="64" font-family="Inter" font-size="14" fill="#a9afc6">tudo é guardado e sincronizado</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">Um dia de trabalho</h3>
+    <div class="grid g4">
+      <div class="card reveal"><span class="num">MANHÃ</span><h3 style="margin-top:6px">Você pede</h3><p>"Monta o relatório
+        de vendas da semana e confere com a planilha."</p></div>
+      <div class="card m reveal"><span class="num">MAESTRI</span><h3 style="margin-top:6px">A equipe faz</h3><p>O Maestro
+        divide: um lê os dados, outro monta, outro confere. Ele revisa.</p></div>
+      <div class="card o reveal"><span class="num">OBSIDIAN</span><h3 style="margin-top:6px">Fica registrado</h3><p>O
+        relatório e a decisão do dia viram arquivos, ligados no índice.</p></div>
+      <div class="card g reveal"><span class="num">GITHUB</span><h3 style="margin-top:6px">Fica guardado</h3><p>Commit e
+        push. À noite, no outro computador, está tudo lá.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMEÇAR -->
+<section id="comecar">
+  <span class="eyebrow reveal"><b class="d-g"></b> 07 · Mão na massa</span>
+  <h2 class="reveal">Monte o seu <span class="grad-all">em 4 passos.</span></h2>
+  <p class="lead reveal">O kit tem um roteiro que a sua própria IA segue. Ela te entrevista sobre você e o seu
+    negócio, explica o que for novidade e monta tudo com você.</p>
+
+  <div class="steps block">
+    <div class="step reveal"><div><h3>Baixe o kit</h3><p>Um .zip com o roteiro para a IA, o guia completo do Maestri,
+      modelos e a cola de comandos.</p>
+      <div class="cta" style="margin-top:14px"><a class="btn pri" href="kit-maestri.zip" download>⬇ Baixar kit-maestri.zip</a></div></div></div>
+    <div class="step reveal"><div><h3>Instale o Maestri e uma IA</h3><p>O Maestri em <a href="https://themaestri.app" target="_blank" rel="noopener">themaestri.app</a>.
+      E pelo menos uma IA de terminal, já logada na sua conta:</p>
+      <div class="term" style="margin-top:12px"><div class="bar"><i></i><i></i><i></i></div>
+<pre><span class="c"># Claude Code · Mac e Linux</span>
+curl -fsSL https://claude.ai/install.sh | bash
+<span class="c"># Claude Code · Windows (PowerShell)</span>
+irm https://claude.ai/install.ps1 | iex
+<span class="c"># Codex · qualquer sistema com Node.js</span>
+npm install -g @openai/codex</pre></div></div></div>
+    <div class="step reveal"><div><h3>Crie a pasta do seu cérebro</h3><p>Uma pasta vazia, por exemplo
+      <code class="in">Documentos/meu-cerebro</code>. Descompacte o kit dentro dela. No Maestri, crie um workspace
+      apontando para essa pasta e abra um terminal com a sua IA.</p></div></div>
+    <div class="step reveal"><div><h3>Mande a IA começar</h3><p>Cole esta mensagem no terminal e responda às perguntas:</p>
+      <div class="copy"><code id="prompt">Leia o arquivo kit-maestri/SETUP-COM-IA.md e siga o roteiro comigo, do começo ao fim.</code>
+        <button type="button" onclick="cp(this)">Copiar</button></div></div></div>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">O que a IA vai te perguntar</h3>
+    <div class="grid g3">
+      <div class="card reveal"><div class="ic">🏢</div><h3>Seu negócio</h3><p>O que você faz, se tem mais de uma empresa,
+        se trabalha em várias frentes ao mesmo tempo.</p></div>
+      <div class="card reveal"><div class="ic">🧠</div><h3>Obsidian?</h3><p>Se quer usar. Não sabe o que é? Ela explica e
+        recomenda o melhor para o seu caso.</p></div>
+      <div class="card reveal"><div class="ic">🔐</div><h3>GitHub?</h3><p>Se quer o histórico na nuvem. Se sim, ensina o
+        login e cria o repositório privado.</p></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3 class="reveal">Três regras de segurança</h3>
+    <ol class="rules">
+      <li class="reveal"><div><b>Nunca cole senha ou token no chat da IA.</b><span>Login sempre pelo navegador ou num terminal separado.</span></div></li>
+      <li class="reveal"><div><b>Repositório sempre privado.</b><span>Se tem dado do seu negócio, só você enxerga.</span></div></li>
+      <li class="reveal"><div><b>Leia antes de aprovar.</b><span>A IA executa comandos na sua máquina. Olhe o que ela pede antes de dizer sim.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="serif" style="font-size:22px;color:var(--tx2);margin-bottom:8px">O Maestri é o palco. Os músicos, você escolhe.</div>
+  Kit Maestri · Victor Hugo · 2026
+</footer>
+
+<script>
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(el){io.observe(el)});
+  } else els.forEach(function(el){el.classList.add('in')});
+
+  var links=[].slice.call(document.querySelectorAll('nav.side a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  var prog=document.getElementById('prog');
+  function onScroll(){
+    var h=document.documentElement, y=h.scrollTop||document.body.scrollTop;
+    prog.style.width=(y/(h.scrollHeight-h.clientHeight)*100)+'%';
+    var cur=0; secs.forEach(function(s,i){if(s&&s.getBoundingClientRect().top<window.innerHeight*.4)cur=i});
+    links.forEach(function(a,i){a.classList.toggle('on',i===cur)});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+})();
+function cp(b){
+  var t=document.getElementById('prompt').textContent;
+  function done(){b.textContent='Copiado ✓';setTimeout(function(){b.textContent='Copiar'},1800)}
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(done,function(){});
+  else{var r=document.createRange();r.selectNode(document.getElementById('prompt'));getSelection().removeAllRanges();getSelection().addRange(r);document.execCommand('copy');done()}
+}
+</script>
+</body>
+</html>

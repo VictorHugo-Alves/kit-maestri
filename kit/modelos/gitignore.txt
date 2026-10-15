@@ -1,0 +1,22 @@
+# Segredos: nunca vão para o GitHub
+.env
+.env.*
+*.key
+*.pem
+credentials*.json
+*token*
+secrets/
+
+# Pastas internas do Maestri (agentes, entregas temporárias)
+.maestri/
+
+# Lixo do sistema e do Obsidian
+.DS_Store
+Thumbs.db
+.obsidian/workspace*.json
+.trash/
+
+# Arquivos pesados (guarde no Drive, não no git)
+*.zip
+*.mp4
+*.mov
