@@ -24,6 +24,9 @@ histórico no **GitHub**. Feito para os alunos da aula de outubro de 2026.
   VH (dados e conferência), Arthur (pesquisa e teste).
 - **Login do GitHub pelo navegador** (`gh auth login`); token nunca vai para o chat da IA.
 - Repositório público porque é material de aula, sem dado de empresa.
+- **Celular:** todo ajuste de tela pequena fica num bloco `@media (max-width:640px)` no fim do CSS, para o
+  desktop não mudar. Ali a linha do tempo do git vira vertical, os passos empilham, os botões ocupam a
+  largura toda e o desenho "Uma pasta, três papéis" rola para o lado (com a dica "Arraste").
 
 ## Como atualizar
 

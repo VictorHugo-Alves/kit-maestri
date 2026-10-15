@@ -189,6 +189,47 @@ code.in{font:13.5px "JetBrains Mono",monospace;background:#ffffff0d;border:1px s
 
 footer{padding:80px 0 60px;text-align:center;color:var(--tx3);font-size:14px;border-top:1px solid var(--line);margin-top:80px}
 .divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:30px 0 0}
+
+.swipe{display:none;margin:10px 0 0;font-size:13px;color:var(--tx3);text-align:center}
+/* celular: só abaixo de 640px, o desktop não muda */
+@media (max-width:640px){
+  html,body{overflow-x:hidden}
+  main{padding:0 18px}
+  section{padding:64px 0 24px}
+  h2{font-size:clamp(30px,8.6vw,38px);margin:14px 0 14px;line-height:1.12}
+  h3{line-height:1.2}
+  .hero{min-height:auto;padding:56px 0 24px}
+  .hero h1{font-size:clamp(40px,12vw,52px);margin:16px 0 16px;line-height:1.04}
+  .hero .lead{font-size:17px}
+  .cta{flex-direction:column;margin-top:26px}
+  .cta .btn{width:100%;justify-content:center}
+  .stage{margin-top:36px;border-radius:18px}
+  .stage .cap{position:static;display:block;padding:10px 14px 14px;line-height:1.4}
+  .card{padding:20px}
+  .card .glow{width:140px;height:140px;right:-30px;bottom:-40px}
+  .term pre{font-size:12px;padding:14px 14px;line-height:1.65}
+  .step{grid-template-columns:minmax(0,1fr);gap:12px;padding:18px}
+  .step>*{min-width:0}
+  .step:before{width:42px;height:42px;font-size:20px;border-radius:12px}
+  .copy{flex-direction:column}
+  .copy code{min-width:0;font-size:12.5px;overflow-wrap:anywhere}
+  .copy button{width:100%}
+  .rules li{grid-template-columns:32px minmax(0,1fr);gap:10px;padding:14px}
+  .rules li:before{font-size:17px}
+  .gloss div{border-right:0}
+  .timeline{padding:10px 0 0;overflow:visible}
+  .commits{flex-direction:column;align-items:stretch;min-width:0;gap:18px}
+  .cm{display:grid;grid-template-columns:30px 1fr;column-gap:14px;text-align:left;align-items:center}
+  .cm:before{top:0;bottom:-18px;left:14px;right:auto;width:2px;height:auto;background:linear-gradient(180deg,#24b47e,#5ee3a1)}
+  .cm:first-child:before{left:14px;top:15px}
+  .cm:last-child:before{right:auto;bottom:auto;height:15px}
+  .cm i{grid-row:span 2}
+  .cm b{margin-top:0}
+  .fit{border-radius:18px;padding:6px;overflow-x:auto}
+  .fit svg{min-width:640px}
+  .swipe{display:block}
+  footer{padding:56px 18px 48px;margin-top:56px}
+}
 </style>
 </head>
 <body>
@@ -630,6 +671,7 @@ footer{padding:80px 0 60px;text-align:center;color:var(--tx3);font-size:14px;bor
       </g>
     </svg>
   </div>
+    <p class="swipe">Arraste o desenho para o lado →</p>
 
   <div class="block">
     <h3 class="reveal">Um dia de trabalho</h3>
