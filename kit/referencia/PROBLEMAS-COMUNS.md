@@ -1,6 +1,6 @@
 # Problemas comuns (e como resolver)
 
-> Tudo aqui aconteceu de verdade com a nossa equipe. Formato: o que acontece, por quê, o que fazer.
+> Tudo aqui aconteceu de verdade com a minha equipe (Victor Hugo). Formato: o que acontece, por quê, o que fazer.
 
 ### 1. O Codex fica parado esperando aprovação
 - **Por quê:** o Codex pede aprovação para muitas ações e espera alguém responder.

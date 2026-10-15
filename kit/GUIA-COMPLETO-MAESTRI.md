@@ -77,11 +77,11 @@ maestri note create "# Quadro ..." --name "Quadro"
 maestri ask "VH" "Confira os números da planilha X e me diga o que não bate."
 ```
 
-### Exemplo real: a nossa equipe de 5 terminais
+### Exemplo real: a minha equipe de 5 terminais (Victor Hugo)
 
 | Nome | IA | Função | Recebe quando |
 |---|---|---|---|
-| **Maestro** | Claude Code (Opus) | orquestra | é com quem a gente fala: decide, divide, revisa, faz commit, push e publica |
+| **Maestro** | Claude Code (Opus) | orquestra | é com quem eu falo: decide, divide, revisa, faz commit, push e publica |
 | **JP** | Claude Code (Opus) | back-end e banco | banco de dados, regras de acesso, rotas de API, integrações |
 | **Junior** | Codex (GPT) | front-end e dashboards | telas e painéis; revisa o código do JP com o olhar de outro modelo |
 | **VH** | Claude Code (Sonnet) | dados e conferência | planilha grande, conferir número antes de ir para a liderança |
@@ -137,4 +137,4 @@ Maestro não tinha critério de quem pegava o quê e acabava fazendo tudo sozinh
 - Site oficial: <https://themaestri.app>
 - Product Hunt: <https://www.producthunt.com/products/maestri>
 - Ajuda do próprio app: `maestri help` e `maestri <comando> --help`
-- A experiência da nossa equipe no dia a dia (outubro de 2026).
+- A minha experiência (Victor Hugo) no dia a dia (outubro de 2026).
